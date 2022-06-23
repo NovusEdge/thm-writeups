@@ -230,5 +230,5 @@ I hope this writeup was useful. Personally, I found this room to be quite a fun 
 
 ***
 
-- Room  : [Bounty Hunter](https://tryhackme.com/room/cowboyhacker) by [Sevuhl](https://tryhackme.com/p/Sevuhl)
+- Room  : [Bounty Hacker](https://tryhackme.com/room/cowboyhacker) by [Sevuhl](https://tryhackme.com/p/Sevuhl)
 - Author: Aliasgar Khimani
