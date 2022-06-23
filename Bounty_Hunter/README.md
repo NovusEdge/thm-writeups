@@ -1,7 +1,3 @@
-#### Overview
-
-Room  : [Bounty Hunter](https://tryhackme.com/room/cowboyhacker)
-Author: Aliasgar Khimani
 
 # Index
 
@@ -232,4 +228,7 @@ Done! This gives the answer to the final task.
 
 I hope this writeup was useful. Personally, I found this room to be quite a fun little experience. If you liked this, please consider dropping a star and/or following me on github: https://github.com/NovusEdge
 
+***
 
+- Room  : [Bounty Hunter](https://tryhackme.com/room/cowboyhacker) by [Sevuhl](https://tryhackme.com/p/Sevuhl)
+- Author: Aliasgar Khimani
