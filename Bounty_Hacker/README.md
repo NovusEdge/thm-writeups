@@ -163,12 +163,12 @@ lin@bountyhacker:~/Desktop$ ls
 user.txt
 
 lin@bountyhacker:~/Desktop$ cat user.txt
-R̶̛̛̛̻͉̜͒͋̀̈́͛͘͠E̷̲̓̋D̸̤͔̒A̷̘̝̞͓̞̰̋́̾̑̈̐̓̊̕͝C̵͚͍̥̬͇̠͎͎̯̏͑̂̈́̀̽̅̔͜T̶̡͍̭̎̒́̆̈Ê̶̦̙̬͙̠̯̰̱̏̕͜D̶͕̮̀̂̾͗̀͛̅͘͘͝
+===R E D A C T E D===
 ```
 
 This gives us the answer to the 6th task:
 > user.txt
-> > R̶̛̛̛̻͉̜͒͋̀̈́͛͘͠E̷̲̓̋D̸̤͔̒A̷̘̝̞͓̞̰̋́̾̑̈̐̓̊̕͝C̵͚͍̥̬͇̠͎͎̯̏͑̂̈́̀̽̅̔͜T̶̡͍̭̎̒́̆̈Ê̶̦̙̬͙̠̯̰̱̏̕͜D̶͕̮̀̂̾͗̀͛̅͘͘͝
+> > ===R E D A C T E D===
 
 
 ## Privilage Escalation
@@ -216,13 +216,13 @@ We can now just `cat` the contents of our `root.txt` file thus obtained:
 
 ```console
 lin@bountyhacker:~/Desktop$ cat root/root.txt 
-R̶̛̛̛̻͉̜͒͋̀̈́͛͘͠E̷̲̓̋D̸̤͔̒A̷̘̝̞͓̞̰̋́̾̑̈̐̓̊̕͝C̵͚͍̥̬͇̠͎͎̯̏͑̂̈́̀̽̅̔͜T̶̡͍̭̎̒́̆̈Ê̶̦̙̬͙̠̯̰̱̏̕͜D̶͕̮̀̂̾͗̀͛̅͘͘͝
+===R E D A C T E D===
 ```
 
 Done! This gives the answer to the final task.
 
 > root.txt
-> > R̶̛̛̛̻͉̜͒͋̀̈́͛͘͠E̷̲̓̋D̸̤͔̒A̷̘̝̞͓̞̰̋́̾̑̈̐̓̊̕͝C̵͚͍̥̬͇̠͎͎̯̏͑̂̈́̀̽̅̔͜T̶̡͍̭̎̒́̆̈Ê̶̦̙̬͙̠̯̰̱̏̕͜D̶͕̮̀̂̾͗̀͛̅͘͘͝
+> > ===R E D A C T E D===
 
 ## Conclusion
 
