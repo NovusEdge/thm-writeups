@@ -173,3 +173,7 @@ And now, we just run the exploit and see the magic happen!
 
 #### Well, The exploit's not working at all for me, so I'll update this writeup when it does. Cheers!
 
+--- 
+
+Link to the room: https://tryhackme.com/room/blue
+
