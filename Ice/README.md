@@ -529,8 +529,9 @@ Kiwi Commands
 ```
 
 We get the answer to the next question.
-> Which command allows up to retrieve all credentials?\
-> > creds_all
+
+> Which command allows up to retrieve all credentials? \
+> > `creds_all`
 
 And running this command gives us the answer to the question after that:
 
@@ -610,11 +611,11 @@ With this last question, we can conclude this room!
 
 ## Conclusion
 
-Personally, I really had a very good time with this room. Kudos to [DarkStar7471](https://tryhackme.com/p/DarkStar7471) for creating such a banger room. 
+Kudos to [DarkStar7471](https://tryhackme.com/p/DarkStar7471) for creating such a banger room. I hope that this writeup helped whoever came across it. If you found this document helpful, consider dropping a star and/or following me on github: https://github.com/NovusEdge
 
-I hope that this writeup helped whoever came across it :)
 
 ---
 
-Link to the room: https://tryhackme.com/room/ice
+Room: [Ice](https://tryhackme.com/room/ice) by [DarkStar7471](https://tryhackme.com/p/DarkStar7471)
 
+Writeup Author: Aliasgar Khimani
