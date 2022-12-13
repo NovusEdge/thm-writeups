@@ -20,7 +20,7 @@ $ sudo openvpn --config NovusEdge.ovpn
 
 Perfoming `nmap` scans shows us the following information:
 ```shell-session
-$ sudo nmap -sS -Pn -vv --top-ports 2000 -oN nmap_scan.txt 10.10.107.37 
+$ sudo nmap -sS -Pn -vv --top-ports 2000 -oN nmap_scan.txt TARGET_IP 
 
 PORT   STATE SERVICE REASON
 22/tcp open  ssh     syn-ack ttl 63
@@ -51,15 +51,15 @@ Since the target is vulnerable to SQLi, we can now use SQLMap for further recon.
 Using Burpsuite and determining the request sent by the browser when accessing the `portal.php` page:
 ```http
 POST /portal.php HTTP/1.1
-Host: 10.10.107.37
+Host: TARGET_IP
 Content-Length: 14
 Cache-Control: max-age=0
 Upgrade-Insecure-Requests: 1
-Origin: http://10.10.107.37
+Origin: http://TARGET_IP
 Content-Type: application/x-www-form-urlencoded
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.5249.62 Safari/537.36
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
-Referer: http://10.10.107.37/portal.php
+Referer: http://TARGET_IP/portal.php
 Accept-Encoding: gzip, deflate
 Accept-Language: en-US,en;q=0.9
 Cookie: PHPSESSID=kfd3hokcd5krmlmrofgs4q45q7
@@ -138,9 +138,9 @@ We can now try to log into the server using `ssh` and the credentials: `agent47:
 
 Using the credentials from the reconnaissance phase, we now log into the server's ssh service.
 ```shell-session
-$ ssh agent47@10.10.107.37
+$ ssh agent47@TARGET_IP
 ...
-agent47@10.10.107.37's password: 
+agent47@TARGET_IP's password: 
 Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.4.0-159-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com
@@ -185,8 +185,8 @@ tcp   LISTEN     0      128                                                     
 
 Since the service running on port 10000 is blocked by a firewall, we can use a ssh tunnel to expose this port to us locally.
 ```shell-session
-$ ssh -L 10000:localhost:10000 agent47@10.10.107.37
-agent47@10.10.107.37's password: 
+$ ssh -L 10000:localhost:10000 agent47@TARGET_IP
+agent47@TARGET_IP's password: 
 Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.4.0-159-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com
@@ -197,7 +197,7 @@ Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.4.0-159-generic x86_64)
 68 updates are security updates.
 
 
-Last login: Sun Nov 27 23:59:23 2022 from 10.10.107.37
+Last login: Sun Nov 27 23:59:23 2022 from TARGET_IP
 agent47@gamezone:~$
 ```
 
