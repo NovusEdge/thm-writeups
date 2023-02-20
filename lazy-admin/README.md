@@ -88,8 +88,10 @@ ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;',
 
   \\"admin\\";s:7:\\"manager\\";s:
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ------------------------------- Username for admin account!
+  
   6:\\"passwd\\";s:32:\\"42f749ade7f9e195bf475f37a44cafcb\\"
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ----- Password for the admin account!
+    
 
   ;s:5:\\"close\\";i:1;s:9:\\"close_tip\\";s:454:\\"<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox \\"Site close\\" to open your website.</p><p>More help at <a href=\\"http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/\\">Tip for Basic CMS SweetRice installed</a></p>\\";s:5:\\"cache\\";i:0;s:13:\\"cache_expired\\";i:0;s:10:\\"user_track\\";i:0;s:11:\\"url_rewrite\\";i:0;s:4:\\"logo\\";s:0:\\"\\";s:5:\\"theme\\";s:0:\\"\\";s:4:\\"lang\\";s:9:\\"en-us.php\\";s:11:\\"admin_email\\";N;}\',\'1575023409\');',
 ```
