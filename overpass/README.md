@@ -70,6 +70,9 @@ Nothing interesting in the results from the `vuln` script. Visiting the `/downlo
 
 This aside, we can probably try to brute force the `/admin/` login page, but that's a waste of time. Inspecting the `/admin/` page shows that it uses 3 files: `main.js`, `cookie.js` and  `login.js`. Upon further inspection of `login.js` we come across the `login()` function:
 
+
+\ 
+
 ```js
 async function login() {
     const usernameBox = document.querySelector("#username");
