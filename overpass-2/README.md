@@ -1,10 +1,10 @@
 ## Index
 
-1. [Setup](#setup)
-2. [Task: 1](#task-1) 
-3. [Task: 2](#task-2)
-4. [Task: 3](#task-3)
-5. [Conclusion](#conclusion)
+1. [[overpass-2/README#Setup|Setup]]
+2. [[overpass-2/README#Task 1|Task 1]]
+3. [[overpass-2/README#Task 2|Task 2]]
+4. [[overpass-2/README#Task 3|Task 3]]
+5. [[overpass-2/README#Conclusion|Conclusion]]
 
 
 ## Setup 
@@ -17,8 +17,7 @@ I'll be using openvpn to connect to the server. Here's the command:
 $ sudo openvpn --config NovusEdge.ovpn
 ```
 
-## Task: 1
-
+## Task 1
 The room provides us with a packet capture record file: `overpass2.pcapng`. We can check it's contents by loading it in wireshark.
 ```shell-session
 # Always check the checksum provided!
@@ -118,9 +117,7 @@ Well, this gives us the answer to the next question in the task:
 >
 > Answer: `4` 
 
-
-## Task: 2
-
+## Task 2
 As the task dictates, when we look through the source code for the backdoor at: https://github.com/NinjaJc01/ssh-backdoor in conjunction with the packet capture records, we get the answers for several questions:
 
 > What's the default hash for the backdoor?
@@ -156,8 +153,6 @@ Status...........: Cracked
 Hash.Mode........: 1710 (sha512($pass.$salt))
 Hash.Target......: 6d05358f090eea56a238af02e47d44ee5489d234810ef624028...002a05
 ...
-...
-
 $ sudo cat cracked.txt                                                               
 6d05358f090eea56a238af02e47d44ee5489d234810ef6240280857ec69712a3e5e370b8a41899d0196ade16c0d54327c5654019292cbfe0b5e98ad1fec71bed:1c362db832f3f864c8c2fe05f2002a05:november16
 ```
@@ -167,8 +162,7 @@ We have thus obtained the cracked password:
 >
 > Answer: `november16`
 
-## Task: 3
-
+## Task 3
 After starting up the machine, let's see what the hacker's done:
 
 ![](very_cute_page.png)
@@ -179,7 +173,7 @@ After starting up the machine, let's see what the hacker's done:
 
 Cute, cute and deadly indeed! Well, too bad for the CooctusClan, we're onto them, so let's start with regaining access to the server. First off, some recon:
 ```shell-session
-$ sudo nmap -sS --top-ports 3000 -vv -oN nmap_scan.txt 10.10.121.90
+$ sudo nmap -sS --top-ports 3000 -vv -oN nmap_scan.txt TARGET_IP
 PORT     STATE SERVICE      REASON
 22/tcp   open  ssh          syn-ack ttl 63
 80/tcp   open  http         syn-ack ttl 63
@@ -189,8 +183,8 @@ PORT     STATE SERVICE      REASON
 
 Seems like there's a ssh service running on ports 22 and 2222. If we try to log into the one running on port 2222 with the cracked credentials as james, we can successfully get access to the machine:
 ```shell-session
-$ ssh -l james -p 2222 -oHostKeyAlgorithms=+ssh-rsa 10.10.121.90
-james@10.10.121.90's password: november16
+$ ssh -l james -p 2222 -oHostKeyAlgorithms=+ssh-rsa TARGET_IP
+james@TARGET_IP's password: november16
 
 james@overpass-production:/home/james/ssh-backdoor $ 
 james@overpass-production:/home/james/ssh-backdoor$ cd ..
