@@ -24,9 +24,3 @@ This is a collection of writeups for CTF challenges and stuff by me (specificall
 - [Startup by elbee](./startup-elbee/)
 - [Steel Mountain](./steel-mountain/)
 - [Windows 10 Privilege Escalation room by tib3rius](./windows-10-privesc-tib3rius)
-
-
-### A side-note
-
-To those people who rant about me putting flags and stuff in my writeups... _Fuck you :P_
-But to clarify, I put the flags because I'm too lazy to censor them (yep, that's all). Also there's some machines like **Blue** that are quite annoying to crack simply because they're too case-specific i.e. they require you to use a very specific exploit that either has a chance to work or will not work for you even if you sell your soul. 
