@@ -24,3 +24,4 @@ This is a collection of writeups for CTF challenges and stuff by me (specificall
 - [Startup by elbee](./startup-elbee/)
 - [Steel Mountain](./steel-mountain/)
 - [Windows 10 Privilege Escalation room by tib3rius](./windows-10-privesc-tib3rius)
+- [Wgel CTF](/wgel-ctf/)
